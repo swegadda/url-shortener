@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Architecture - URL Shortener</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f1117; color: #e1e4e8; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; padding: 2rem;
+    }
+    h1 { font-size: 2rem; margin-bottom: 0.5rem; color: #58a6ff; }
+    .subtitle { color: #8b949e; margin-bottom: 2rem; }
+    .card {
+      background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+      padding: 1.5rem; width: 100%; max-width: 900px; margin-bottom: 1.5rem;
+    }
+    a.back { color: #58a6ff; text-decoration: none; margin-bottom: 1.5rem; }
+    a.back:hover { text-decoration: underline; }
+    svg text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  </style>
+</head>
+<body>
+  <h1>🏗️ Architecture</h1>
+  <p class="subtitle">Serverless URL Shortener on AWS</p>
+  <a class="back" href="index.html">← Back to URL Shortener</a>
+
+  <div class="card">
+    <svg viewBox="0 0 880 520" xmlns="http://www.w3.org/2000/svg">
+      <!-- User -->
+      <rect x="10" y="210" width="100" height="60" rx="8" fill="#30363d" stroke="#58a6ff" stroke-width="2"/>
+      <text x="60" y="235" text-anchor="middle" fill="#e1e4e8" font-size="13" font-weight="600">👤 User</text>
+      <text x="60" y="255" text-anchor="middle" fill="#8b949e" font-size="11">Browser</text>
+
+      <!-- CloudFront -->
+      <rect x="170" y="100" width="140" height="70" rx="8" fill="#1a1f2b" stroke="#f0883e" stroke-width="2"/>
+      <text x="240" y="128" text-anchor="middle" fill="#f0883e" font-size="12" font-weight="600">Amazon</text>
+      <text x="240" y="148" text-anchor="middle" fill="#f0883e" font-size="12" font-weight="600">CloudFront</text>
+      <text x="240" y="163" text-anchor="middle" fill="#8b949e" font-size="10">CDN</text>
+
+      <!-- S3 -->
+      <rect x="170" y="10" width="140" height="60" rx="8" fill="#1a1f2b" stroke="#3fb950" stroke-width="2"/>
+      <text x="240" y="35" text-anchor="middle" fill="#3fb950" font-size="12" font-weight="600">Amazon S3</text>
+      <text x="240" y="55" text-anchor="middle" fill="#8b949e" font-size="10">Static Frontend</text>
+
+      <!-- API Gateway -->
+      <rect x="170" y="310" width="140" height="70" rx="8" fill="#1a1f2b" stroke="#bc8cff" stroke-width="2"/>
+      <text x="240" y="338" text-anchor="middle" fill="#bc8cff" font-size="12" font-weight="600">API Gateway</text>
+      <text x="240" y="358" text-anchor="middle" fill="#8b949e" font-size="10">REST API</text>
+      <text x="240" y="373" text-anchor="middle" fill="#8b949e" font-size="10">+ CORS</text>
+
+      <!-- Lambda Create -->
+      <rect x="400" y="210" width="140" height="60" rx="8" fill="#1a1f2b" stroke="#f0883e" stroke-width="2"/>
+      <text x="470" y="235" text-anchor="middle" fill="#f0883e" font-size="12" font-weight="600">λ Create</text>
+      <text x="470" y="253" text-anchor="middle" fill="#8b949e" font-size="10">POST /create</text>
+
+      <!-- Lambda Redirect -->
+      <rect x="400" y="310" width="140" height="60" rx="8" fill="#1a1f2b" stroke="#f0883e" stroke-width="2"/>
+      <text x="470" y="335" text-anchor="middle" fill="#f0883e" font-size="12" font-weight="600">λ Redirect</text>
+      <text x="470" y="353" text-anchor="middle" fill="#8b949e" font-size="10">GET /{short_code}</text>
+
+      <!-- Lambda Analytics -->
+      <rect x="400" y="410" width="140" height="60" rx="8" fill="#1a1f2b" stroke="#f0883e" stroke-width="2"/>
+      <text x="470" y="435" text-anchor="middle" fill="#f0883e" font-size="12" font-weight="600">λ Analytics</text>
+      <text x="470" y="453" text-anchor="middle" fill="#8b949e" font-size="10">GET /analytics</text>
+
+      <!-- DynamoDB -->
+      <rect x="640" y="290" width="140" height="70" rx="8" fill="#1a1f2b" stroke="#58a6ff" stroke-width="2"/>
+      <text x="710" y="318" text-anchor="middle" fill="#58a6ff" font-size="12" font-weight="600">DynamoDB</text>
+      <text x="710" y="338" text-anchor="middle" fill="#8b949e" font-size="10">url-shortener-urls</text>
+      <text x="710" y="353" text-anchor="middle" fill="#8b949e" font-size="10">PAY_PER_REQUEST</text>
+
+      <!-- AWS Lambda label -->
+      <rect x="390" y="190" width="160" height="295" rx="10" fill="none" stroke="#484f58" stroke-width="1" stroke-dasharray="6,3"/>
+      <text x="470" y="500" text-anchor="middle" fill="#484f58" font-size="10">AWS Lambda (Python 3.12)</text>
+
+      <!-- Arrows: User → CloudFront -->
+      <line x1="110" y1="225" x2="168" y2="150" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="130" y="178" fill="#8b949e" font-size="9">HTTPS</text>
+
+      <!-- Arrows: User → API Gateway -->
+      <line x1="110" y1="255" x2="168" y2="330" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="125" y="305" fill="#8b949e" font-size="9">API calls</text>
+
+      <!-- Arrows: CloudFront → S3 -->
+      <line x1="240" y1="100" x2="240" y2="72" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <text x="255" y="90" fill="#8b949e" font-size="9">OAC</text>
+
+      <!-- Arrows: API GW → Lambdas -->
+      <line x1="310" y1="330" x2="398" y2="245" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="310" y1="345" x2="398" y2="340" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="310" y1="360" x2="398" y2="435" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- Arrows: Lambdas → DynamoDB -->
+      <line x1="540" y1="240" x2="638" y2="310" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="540" y1="340" x2="638" y2="330" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="540" y1="440" x2="638" y2="345" stroke="#8b949e" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <!-- DynamoDB access labels -->
+      <text x="595" y="270" fill="#8b949e" font-size="9">R/W</text>
+      <text x="595" y="330" fill="#8b949e" font-size="9">R/W</text>
+      <text x="595" y="395" fill="#8b949e" font-size="9">Read</text>
+
+      <!-- Arrow marker -->
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#8b949e"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+</body>
+</html>
