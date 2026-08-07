@@ -47,7 +47,7 @@ def handler(event, context):
 
         return {
             "statusCode": 301,
-            "headers": {**headers, "Location": item["long_url"]},
+            "headers": {**headers, "Location": item["longurl"]},
             "body": "",
         }
 
